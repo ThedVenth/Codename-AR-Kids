@@ -26,6 +26,8 @@ public class ReadGameplayUIManager : MonoBehaviour
             Destroy(instance);
 
         instance = this;
+
+        UIRoot.SetActive(false);
     }
 
     #region object tracking section
@@ -49,11 +51,13 @@ public class ReadGameplayUIManager : MonoBehaviour
     public void SwitchContent ()
     {
         currentlyActiveObject.SwitchContent();
+        ValidateIsShowingSideContent(currentlyActiveObject.isShowingSideContent);
     }
 
     public void SwitchMainContentSize ()
     {
         currentlyActiveObject.SwitchMainContentSize();
+        ValidateMainContentSizeButton(currentlyActiveObject.mainContent.isShowSmallContent);
     }
 
     public void SwitchLanguage ()

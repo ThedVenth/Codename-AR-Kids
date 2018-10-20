@@ -34,18 +34,22 @@ public class ReadObjectBehaviour : MonoBehaviour
     {
         isInitted = true;
         OnEnable();
+        Stop();
     }
 
     public void Play ()
     {
         masterContentRoot.SetActive(true);
         HideSideContent();
+        mainContent.Init();
+        mainContentRoot.SetActive(true);
     }
 
     public void Stop ()
     {
-        masterContentRoot.SetActive(false);
         HideSideContent();
+        mainContentRoot.SetActive(false);
+        masterContentRoot.SetActive(false);
     }
 
     public void SwitchContent ()
@@ -55,7 +59,10 @@ public class ReadObjectBehaviour : MonoBehaviour
         if (isShowingSideContent)
             ShowRandomSideContent();
         else
+        {
             HideSideContent();
+            mainContentRoot.SetActive(true);
+        }
     }
 
     public void OnChangeLanguage(bool _isEnglish)
@@ -63,7 +70,10 @@ public class ReadObjectBehaviour : MonoBehaviour
         mainContent.OnChangeLanguage(_isEnglish);
 
         if (isShowingSideContent)
+        {
+            HideSideContent();
             ShowRandomSideContent();
+        }
     }
 
     public void SwitchMainContentSize ()
@@ -83,6 +93,8 @@ public class ReadObjectBehaviour : MonoBehaviour
     int tempMaxVal;
     void ShowRandomSideContent()
     {
+        sideContetnRoot.SetActive(true);
+
         tempMaxVal = 
             (ReadGameplayTrackingManager.instance.isEnglish) ?
             sideEnContents.Count : sideIdContents.Count;
@@ -94,10 +106,12 @@ public class ReadObjectBehaviour : MonoBehaviour
 
     public void ShowNextContent()
     {
+        HideCurrenlyActiveSideContent();
+
         currentlyActiveIndex++;
         tempMaxVal = 
             (ReadGameplayTrackingManager.instance.isEnglish) ?
-            sideEnContents.Count : sideIdContents.Count;
+            sideEnContents.Count - 1 : sideIdContents.Count - 1;
 
         if (currentlyActiveIndex > tempMaxVal)
             currentlyActiveIndex = 0;
@@ -107,12 +121,14 @@ public class ReadObjectBehaviour : MonoBehaviour
 
     public void ShowPrevoiusContent()
     {
+        HideCurrenlyActiveSideContent();
+
         currentlyActiveIndex--;
 
         if (currentlyActiveIndex < 0)
             currentlyActiveIndex =
                 (ReadGameplayTrackingManager.instance.isEnglish) ?
-                sideEnContents.Count : sideIdContents.Count;
+                sideEnContents.Count - 1 : sideIdContents.Count - 1;
 
         ShowSideContent(currentlyActiveIndex);
     }
@@ -129,24 +145,28 @@ public class ReadObjectBehaviour : MonoBehaviour
             sideEnContents[_index].SetActive(true);
     }
 
-    void HideSideContent()
+    void HideCurrenlyActiveSideContent()
     {
         if (!ReadGameplayTrackingManager.instance.isEnglish)
-        {
-            foreach (ReadObjectDataModel _obj in sideIdContents)
-            {
-                _obj.SetActive(false);
-            }
-        }
+            sideIdContents[currentlyActiveIndex].SetActive(false);
         else
+            sideEnContents[currentlyActiveIndex].SetActive(false);
+    }
+
+    void HideSideContent()
+    {
+       foreach (ReadObjectDataModel _obj in sideIdContents)
         {
-            foreach (ReadObjectDataModel _obj in sideEnContents)
-            {
-                _obj.SetActive(false);
-            }
+            _obj.SetActive(false);
         }
 
-        mainContentRoot.SetActive(true);
+       foreach (ReadObjectDataModel _obj in sideEnContents)
+        {
+           _obj.SetActive(false);
+        }
+
+        isShowingSideContent = false;
+        sideContetnRoot.SetActive(false);
     }
 
     void PlaySideContentAudio ()

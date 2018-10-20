@@ -25,13 +25,18 @@ public class ReadGameplayTrackingManager : MonoBehaviour
 	{
 		if(!trackedObjectList.Contains(_obj))
 			trackedObjectList.Add(_obj);
+
+        ValidateWhichShouldPlay();
 	}
 	
 	public void RemoveTrackedObject(ReadObjectBehaviour _obj)
 	{
 		if(trackedObjectList.Contains(_obj))
 			trackedObjectList.Remove(_obj);
-	}
+
+        _obj.Stop();
+        ValidateWhichShouldPlay();
+    }
 
     public void ChangeLanguage()
     {
