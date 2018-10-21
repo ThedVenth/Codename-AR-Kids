@@ -1296,7 +1296,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   content: {fileID: 1319558847}
-  startPos: {x: 1000, y: 0, z: 0}
+  startPos: {x: 1500, y: 0, z: 0}
   waitPos: {x: 300, y: 0, z: 0}
   endPos: {x: -1500, y: 0, z: 0}
   transitionSpeed: 1500
